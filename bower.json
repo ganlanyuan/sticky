@@ -1,0 +1,21 @@
+{
+  "name": "sticky-js",
+  "homepage": "https://github.com/ganlanyuan/sticky",
+  "authors": [
+    "William <ganlanyuan@gmail.com>"
+  ],
+  "description": "",
+  "main": "/dist/",
+  "moduleType": [],
+  "keywords": [
+    "sticky"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
