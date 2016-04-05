@@ -1,6 +1,6 @@
 ## Sticky
 Make elements stay visible within its container. Similar with CSS `position: sticky`.  
-[demo](http://creatiointl.org/gallery/william/sticky/v1/tests/)  
+[demo](http://creatiointl.org/gallery/william/sticky/v0/tests/)  
 [changelog](https://github.com/ganlanyuan/sticky/blob/master/CHANGELOG.md)  
 
 ## Why don't use `position: sticky`?

@@ -1,6 +1,6 @@
 ## Change log
 
-#### v1.0.0
+#### v0.0.0
 - Use: `position: fixed`, `position: absolute`.
 - Support: multiple selector.
 - Support: `top`, `bottom`.
