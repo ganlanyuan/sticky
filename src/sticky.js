@@ -1,5 +1,9 @@
 /**
   * sticky 
+  *
+  * @author William Lin
+  * @license The MIT License (MIT)
+  * https://github.com/ganlanyuan/sticky
   * 
   * DEPENDENCIES:
   *
@@ -29,20 +33,17 @@
   function sticky (options) {
     var stickyEls = document.querySelectorAll(options.sticky);
 
-    if (stickyEls.length === 0) { 
-      console.log('"' + options.nav + '" can\'t be found.'); 
-      return;
-    }
+    if (stickyEls.length === 0) { return; }
 
     for (var i = stickyEls.length; i--;) {
       var newOptions = options;
       newOptions.sticky = stickyEls[i];
 
-      var a = new stickyCore(newOptions);
+      var a = new StickyCore(newOptions);
     }
   }
 
-  function stickyCore (options) {
+  function StickyCore (options) {
     options = gn.extend({ 
       sticky: document.querySelector('.sticky'),
       container: false,
@@ -139,7 +140,7 @@
           bottom = (pattern.exec(style.marginBottom) === null) ? 0 : parseInt(Length.toPx(sticky, style.marginBottom));
 
       // update sizes, position and breakpoints
-      stickyWidth = jsWrapper.clientWidth - left - right;;
+      stickyWidth = jsWrapper.clientWidth - left - right;
       stickyHeight = sticky.offsetHeight + top + bottom;
       windowHeight = window.innerHeight;
 
@@ -185,10 +186,8 @@
         switch (bp.length) {
           case 2:
             return function () { return windowWidth >= bp[0] && windowWidth < bp[1]; };
-            break;
           case 3:
             return function () { return windowWidth >= bp[0] && windowWidth < bp[1] || windowWidth >= bp[2]; };
-            break;
           default:
             return function () { return windowWidth >= bp[0] && windowWidth < bp[1] || windowWidth >= bp[2] && windowWidth < bp[3]; };
         }
