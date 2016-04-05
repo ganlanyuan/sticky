@@ -188,7 +188,7 @@
             return function () { return windowWidth >= bp[0] && windowWidth < bp[1]; };
           case 3:
             return function () { return windowWidth >= bp[0] && windowWidth < bp[1] || windowWidth >= bp[2]; };
-          default:
+          case 4:
             return function () { return windowWidth >= bp[0] && windowWidth < bp[1] || windowWidth >= bp[2] && windowWidth < bp[3]; };
         }
       }
