@@ -12,7 +12,6 @@
   *
   * == all ==
   * Array.isArray
-  * classList
   * requestAnimationFrame
   * optimizedResize
   * extend
@@ -70,7 +69,6 @@
         windowHeight,
         stickyWidth,
         stickyHeight,
-        containerHeight,
         fixedBreakpoint,
         absoluteBreakpoint,
 
@@ -80,13 +78,13 @@
         fixed = false,
         absolute = false,
 
-        stickyRectTop = 0,
-        containerRectTop = false,
+        stickyRectPosition = 0,
+        containerRectPosition = false,
         ticking = false;
 
     // init: 
     // wrap sticky with a new <div>
-    // to track sticky width and scrollTop
+    // to track sticky width and BoundingClientRect
     this.init = function () {
       jsWrapper = document.createElement('div');
       jsWrapper.className = 'js-sticky-wrapper';
@@ -94,6 +92,38 @@
 
       initialized = true;
     };
+
+    // check if sticky is longer than window height
+    // if so, set position to bottom
+    this.getPosition = function () {
+      return (stickyHeight > windowHeight)? 'bottom' : position;
+    };
+    
+    // get pinned / fixed breakpoint
+    // based on sticky scrollTop (getBoundingClientRect().top)
+    this.getFixedBreakpoint = function () {
+      if (position === 'top') {
+        return padding;
+      } else {
+        return windowHeight - padding;
+      }
+    };
+
+    // get followed / absolute breakpoint
+    // based on container scrollTop (getBoundingClientRect().top)
+    this.getAbsoluteBreakpoint = (function () {
+      if (!container) {
+        return function () { return false; };
+      } else {
+        return function () {
+          if (position === 'top') {
+            return  stickyHeight + padding;
+          } else {
+            return windowHeight;
+          }
+        };
+      }
+    })();
 
     // update sizes:
     // get sticky, container and window information to calculate
@@ -111,7 +141,6 @@
       // update sizes, position and breakpoints
       stickyWidth = jsWrapper.clientWidth - left - right;;
       stickyHeight = sticky.offsetHeight + top + bottom;
-      if (container) { containerHeight = container.clientHeight; }
       windowHeight = window.innerHeight;
 
       position = this.getPosition();
@@ -127,6 +156,17 @@
       sticky.style.width = '';
       sticky.style[position] = '';
       gn.unwrap(jsWrapper);
+
+      if (isSticky) {
+        sticky.className = sticky.className.replace(' js-sticky', '');
+        sticky.style.position = '';
+        sticky.style.width = '';
+        sticky.style.top = '';
+        sticky.style.bottom = '';
+        isSticky = false;
+        fixed = false;
+        absolute = false;
+      }
 
       inRange = false;
       initialized = false;
@@ -155,38 +195,6 @@
       }
     })();
 
-    // check if sticky is longer than window height
-    // if so, set position to bottom
-    this.getPosition = function () {
-      return (stickyHeight > windowHeight)? 'bottom' : position;
-    };
-    
-    // get pinned / fixed breakpoint
-    // based on sticky scrollTop (getBoundingClientRect().top)
-    this.getFixedBreakpoint = function () {
-      if (position === 'top') {
-        return padding;
-      } else {
-        return windowHeight - stickyHeight - padding;
-      }
-    };
-
-    // get followed / absolute breakpoint
-    // based on container scrollTop (getBoundingClientRect().top)
-    this.getAbsoluteBreakpoint = (function () {
-      if (!container) {
-        return function () { return false; };
-      } else {
-        return function () {
-          if (position === 'top') {
-            return  stickyHeight + padding - containerHeight;
-          } else {
-            return windowHeight - containerHeight;
-          }
-        };
-      }
-    })();
-
     // onload:
     // check if the window is in the range
     // if so, wrap sticky with new <div> and store size information
@@ -201,6 +209,14 @@
       } else if (!inRange && initialized) {
         this.destory();
       }
+
+      if (initialized) {
+        stickyRectPosition = jsWrapper.getBoundingClientRect()[position];
+        containerRectPosition = (container) ? container.getBoundingClientRect().bottom : false;
+
+        this.onScroll();
+        if (isSticky) { sticky.style.width = stickyWidth + 'px'; }
+      }
     };
 
     // onresize:
@@ -208,33 +224,9 @@
     // and update sticky width while it's pinned or following
     this.onResize = function () {
       this.onLoad();
-      this.updateSizes();
 
       if (initialized) {
-        if (isSticky) { sticky.style.width = stickyWidth + 'px'; }
-        this.onScroll();
-      }
-    }
-
-    this.isNormal = function () {
-      sticky.classList.remove('js-fixed-' + position, 'js-sticky');
-    };
-
-    this.isFixed = function () {
-      if (!sticky.classList.contains('js-fixed-' + position)) {
-        sticky.classList.add('js-fixed-' + position, 'js-sticky');
-        sticky.classList.remove('js-absolute');
-        if (container) {
-          container.classList.remove('js-relative');
-        }
-      }
-    };
-
-    this.isAbsolute = function () {
-      if (!sticky.classList.contains('js-absolute')) {
-        container.classList.add('js-relative');
-        sticky.classList.add('js-absolute');
-        sticky.classList.remove('js-fixed-' + position);
+        this.updateSizes();
       }
     };
 
@@ -243,45 +235,58 @@
     // the adventage of using getBoundingClientRect().top instead of offsetTop is that the sticky will not be affected by other element's height changing while scrolling
     // e.g. when window scroll down, the header become fixed positioned, thus height property become 0
     this.onScroll = function () {
-      if (stickyRectTop > fixedBreakpoint) {
+      if (stickyRectPosition > fixedBreakpoint) {
+        // normal - non-sticky
+        // reset position, top, bottom, width, height
         if (isSticky) {
-          this.isNormal();
+          sticky.className = sticky.className.replace(' js-sticky', '');
+          jsWrapper.style.height = '';
+          sticky.style.position = '';
           sticky.style.width = '';
           sticky.style.top = '';
           sticky.style.bottom = '';
-          jsWrapper.style.height = '';
           isSticky = false;
           fixed = false;
           absolute = false;
         }
       } else {
+        // add .js-sticky, set width, height
         if (!isSticky) {
-          sticky.style.width = stickyWidth + 'px';
           jsWrapper.style.height = stickyHeight + 'px';
+          sticky.className += ' js-sticky';
+          sticky.style.width = stickyWidth + 'px';
           isSticky = true;
         }
 
         if (container) {
-          if (!fixed && stickyRectTop <= fixedBreakpoint && containerRectTop > absoluteBreakpoint) {
-            this.isFixed();
+          if (!fixed && stickyRectPosition <= fixedBreakpoint && containerRectPosition > absoluteBreakpoint) {
+            // fixed (with container):
+            // remove container relative-position
+            if (container) {
+              container.style.position = '';
+            }
+            sticky.style.position = 'fixed';
             sticky.style[position] = padding + 'px';
             if (position === 'top') {
               sticky.style.bottom = '';
             }
             fixed = true;
             absolute = false;
-          } else if (!absolute && containerRectTop <= absoluteBreakpoint) {
-            this.isAbsolute();
-            sticky.style.top = '';
+          } else if (!absolute && containerRectPosition <= absoluteBreakpoint) {
+            // absolute:
+            container.style.position = 'relative';
+            sticky.style.position = 'absolute';
             if (position === 'top') {
+              sticky.style.top = '';
               sticky.style.bottom = '0px';
             }
             fixed = false;
             absolute = true;
           }
         } else {
-          if (!fixed && stickyRectTop <= fixedBreakpoint) {
-            this.isFixed();
+          // fixed (without container)
+          if (!fixed && stickyRectPosition <= fixedBreakpoint) {
+            sticky.style.position = 'fixed';
             sticky.style[position] = padding + 'px';
             fixed = true;
           }
@@ -299,10 +304,9 @@
     });
 
     window.addEventListener('scroll', function () { 
-      stickyRectTop = jsWrapper.getBoundingClientRect().top;
-      if (container) {
-        containerRectTop = container.getBoundingClientRect().top;
-      }
+      if (!initialized) { return; }
+      stickyRectPosition = jsWrapper.getBoundingClientRect()[position];
+      containerRectPosition = (container) ? container.getBoundingClientRect().bottom : false;
       if (!ticking) {
         window.requestAnimationFrame(function () {
           if (initialized) {

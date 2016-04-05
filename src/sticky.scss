@@ -1,0 +1,13 @@
+// *** sticky *** //
+
+.js-sticky {
+  box-sizing: border-box;
+  &-wrapper {
+    &:before,
+    &:after {
+      content: '';
+      display: table;
+      clear: both;
+    }
+  }
+}

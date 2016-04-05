@@ -14,8 +14,8 @@
   
   <link rel="stylesheet" href="../dist/sticky.css">
   <link rel="stylesheet" href="css/style.css">
-  <script type="text/javascript" src="../dist/stickyDep.ie8.js"></script>
-  <script type="text/javascript" src="../dist/stickyDep.js"></script>
+  <script type="text/javascript" src="../dist/sticky.helper.ie8.js"></script>
+  <script type="text/javascript" src="../dist/sticky.helper.js"></script>
   <script type="text/javascript" src="../dist/sticky.js"></script>
 </head>
 <body>
@@ -101,7 +101,8 @@
         header.classList.remove('fixed');
       }
     }
-  })
+  });
+  
   sticky({
     sticky: '.sticky-left-1', 
     container: '.sticky-container-left-1',
