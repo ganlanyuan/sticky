@@ -40,7 +40,7 @@
       var newOptions = options;
       newOptions.sticky = stickyEls[i];
 
-      var a = new StickyCore(newOptions);
+      return new StickyCore(newOptions);
     }
   }
 
