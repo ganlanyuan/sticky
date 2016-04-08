@@ -5,7 +5,12 @@
     "William <ganlanyuan@gmail.com>"
   ],
   "description": "",
-  "main": "/dist/",
+  "main": [
+    "/dist/sticky.css",
+    "/dist/sticky.js",
+    "/dist/sticky.helper.js",
+    "/dist/sticky.helper.ie8.js",
+  ],
   "moduleType": [],
   "keywords": [
     "stikcy"
