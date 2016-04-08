@@ -31,8 +31,9 @@
   'use strict';
 
   function sticky (options) {
-    var stickyEls = document.querySelectorAll(options.sticky);
+    if (!options.sticky) { options.sticky = '.sticky'; }
 
+    var stickyEls = document.querySelectorAll(options.sticky);
     if (stickyEls.length === 0) { return; }
 
     for (var i = stickyEls.length; i--;) {
@@ -45,7 +46,7 @@
 
   function StickyCore (options) {
     options = gn.extend({ 
-      sticky: document.querySelector('.sticky'),
+      sticky: '.sticky',
       container: false,
       padding: 0,
       position: 'top',
@@ -79,8 +80,8 @@
         fixed = false,
         absolute = false,
 
-        stickyRectPosition = 0,
-        containerRectPosition = false,
+        stickyRectEdge = 0,
+        containerRectEdge = false,
         ticking = false;
 
     // init: 
@@ -94,12 +95,6 @@
       initialized = true;
     };
 
-    // check if sticky is longer than window height
-    // if so, set position to bottom
-    this.getPosition = function () {
-      return (stickyHeight > windowHeight)? 'bottom' : position;
-    };
-    
     // get pinned / fixed breakpoint
     // based on sticky scrollTop (getBoundingClientRect().top)
     this.getFixedBreakpoint = function () {
@@ -144,7 +139,6 @@
       stickyHeight = sticky.offsetHeight + top + bottom;
       windowHeight = window.innerHeight;
 
-      position = this.getPosition();
       fixedBreakpoint = this.getFixedBreakpoint();
       absoluteBreakpoint = this.getAbsoluteBreakpoint();
     };
@@ -210,8 +204,8 @@
       }
 
       if (initialized) {
-        stickyRectPosition = jsWrapper.getBoundingClientRect()[position];
-        containerRectPosition = (container) ? container.getBoundingClientRect().bottom : false;
+        stickyRectEdge = jsWrapper.getBoundingClientRect()[position];
+        containerRectEdge = (container) ? container.getBoundingClientRect().bottom : false;
 
         this.onScroll();
         if (isSticky) { sticky.style.width = stickyWidth + 'px'; }
@@ -234,7 +228,7 @@
     // the adventage of using getBoundingClientRect().top instead of offsetTop is that the sticky will not be affected by other element's height changing while scrolling
     // e.g. when window scroll down, the header become fixed positioned, thus height property become 0
     this.onScroll = function () {
-      if (stickyRectPosition > fixedBreakpoint) {
+      if (stickyRectEdge > fixedBreakpoint) {
         // normal - non-sticky
         // reset position, top, bottom, width, height
         if (isSticky) {
@@ -258,7 +252,7 @@
         }
 
         if (container) {
-          if (!fixed && stickyRectPosition <= fixedBreakpoint && containerRectPosition > absoluteBreakpoint) {
+          if (!fixed && stickyRectEdge <= fixedBreakpoint && containerRectEdge > absoluteBreakpoint) {
             // fixed (with container):
             // remove container relative-position
             if (container) {
@@ -271,7 +265,7 @@
             }
             fixed = true;
             absolute = false;
-          } else if (!absolute && containerRectPosition <= absoluteBreakpoint) {
+          } else if (!absolute && containerRectEdge <= absoluteBreakpoint) {
             // absolute:
             container.style.position = 'relative';
             sticky.style.position = 'absolute';
@@ -284,7 +278,7 @@
           }
         } else {
           // fixed (without container)
-          if (!fixed && stickyRectPosition <= fixedBreakpoint) {
+          if (!fixed && stickyRectEdge <= fixedBreakpoint) {
             sticky.style.position = 'fixed';
             sticky.style[position] = padding + 'px';
             fixed = true;
@@ -304,8 +298,8 @@
 
     window.addEventListener('scroll', function () { 
       if (!initialized) { return; }
-      stickyRectPosition = jsWrapper.getBoundingClientRect()[position];
-      containerRectPosition = (container) ? container.getBoundingClientRect().bottom : false;
+      stickyRectEdge = jsWrapper.getBoundingClientRect()[position];
+      containerRectEdge = (container) ? container.getBoundingClientRect().bottom : false;
       if (!ticking) {
         window.requestAnimationFrame(function () {
           if (initialized) {

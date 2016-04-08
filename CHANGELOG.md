@@ -1,5 +1,9 @@
 ## Change log
 
+#### v0.0.1
+- Fixed: an issue when `sticky` selector is not provided.
+- Improved: no longer force `position` property to `bottom` when sticky element is longer than window height. You can freely set it to `top` or `bottom`.
+
 #### v0.0.0
 - Use: `position: fixed`, `position: absolute`.
 - Support: multiple selector.
