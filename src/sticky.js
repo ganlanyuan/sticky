@@ -96,17 +96,17 @@
     };
 
     // get pinned / fixed breakpoint
-    // based on sticky scrollTop (getBoundingClientRect().top)
-    this.getFixedBreakpoint = function () {
+    // based on sticky getBoundingClientRect().top/bottom
+    this.getFixedBreakpoint = (function () {
       if (position === 'top') {
-        return padding;
+        return function () { return padding; };
       } else {
-        return windowHeight - padding;
+        return function () { return windowHeight - padding; };
       }
-    };
+    })();
 
     // get followed / absolute breakpoint
-    // based on container scrollTop (getBoundingClientRect().top)
+    // based on container getBoundingClientRect().bottom
     this.getAbsoluteBreakpoint = (function () {
       if (!container) {
         return function () { return false; };
