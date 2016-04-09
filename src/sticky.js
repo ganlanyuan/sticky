@@ -89,7 +89,7 @@
     // to track sticky width and BoundingClientRect
     this.init = function () {
       jsWrapper = document.createElement('div');
-      jsWrapper.className = 'js-sticky-wrapper';
+      jsWrapper.className = 'js-sticky-container';
       gn.wrap(sticky, jsWrapper);
 
       initialized = true;
