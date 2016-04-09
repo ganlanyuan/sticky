@@ -31,7 +31,13 @@
   'use strict';
 
   function sticky (options) {
-    if (!options.sticky) { options.sticky = '.sticky'; }
+    options = gn.extend({ 
+      sticky: '.sticky',
+      container: false,
+      padding: 0,
+      position: 'top',
+      breakpoints: false,
+    }, options || {});
 
     var stickyEls = document.querySelectorAll(options.sticky);
     if (stickyEls.length === 0) { return; }
@@ -45,17 +51,8 @@
   }
 
   function StickyCore (options) {
-    options = gn.extend({ 
-      sticky: '.sticky',
-      container: false,
-      padding: 0,
-      position: 'top',
-      breakpoints: false,
-    }, options || {});
-
     // basic variables
-    var
-        bp = options.breakpoints,
+    var bp = options.breakpoints,
         sticky = options.sticky,
         stickyClassNames = sticky.className,
         container = (options.container) ? document.querySelector(options.container) : false,
