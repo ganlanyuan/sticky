@@ -1,21 +1,37 @@
 {
   "name": "sticky",
-  "homepage": "https://github.com/ganlanyuan/sticky",
-  "authors": [
-    "William <ganlanyuan@gmail.com>"
+  "version": "0.0.1",
+  "main": [
+    "/dist/sticky.css",
+    "/dist/sticky.js",
+    "/dist/sticky.helper.js",
+    "/dist/sticky.helper.ie8.js"
   ],
-  "description": "",
-  "main": "/dist/",
-  "moduleType": [],
   "keywords": [
-    "stikcy"
+    "sticky"
   ],
+  "authors": [
+    "William Lin <ganlanyuan@gmail.com>"
+  ],
+  "description": "Make elements stay visible within its container.",
   "license": "MIT",
   "ignore": [
     "**/.*",
+    ".gitignore",
+    ".sublime-project",
+    ".codekit",
+    "sftp-config.json",
+    "bower.json",
+    "README.md",
     "node_modules",
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "homepage": "https://github.com/ganlanyuan/sticky",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ganlanyuan/sticky.git"
+  },
+  "dependencies": {}
 }
