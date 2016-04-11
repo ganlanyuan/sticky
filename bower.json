@@ -5,12 +5,7 @@
     "William <ganlanyuan@gmail.com>"
   ],
   "description": "Make elements stay visible within its container.",
-  "main": [
-    "/dist/Sticky.css",
-    "/dist/Sticky.js",
-    "/dist/Sticky.helper.js",
-    "/dist/Sticky.helper.ie8.js"
-  ],
+  "main": "",
   "keywords": [
     "sticky"
   ],
