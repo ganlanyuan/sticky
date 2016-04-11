@@ -1,7 +1,7 @@
 /**
   * sticky 
   *
-  * v0.0.1
+  * v0.0.2
   * @author William Lin
   * @license The MIT License (MIT)
   * https://github.com/ganlanyuan/sticky
