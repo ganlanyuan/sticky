@@ -1,5 +1,8 @@
 ## Change log
 
+#### v0.1.1
+- Update bower.json: move `go-native` from dependencies to devDependencies.
+
 #### v0.1.0
 - Improved: rewrite with Prototype Pattern.
 
