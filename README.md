@@ -27,7 +27,7 @@ Include sticky (css, js)
 <![endif]-->
 <script src="sticky.js"></script>
 ```
-Or sticky (css, js) and [go-native](https://github.com/ganlanyuan/go-native) (10k),
+Or sticky.native (css, js) and [go-native](https://github.com/ganlanyuan/go-native) (10k),
 ```html
 <link rel="stylesheet" href="sticky.css">
 
