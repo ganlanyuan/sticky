@@ -14,14 +14,13 @@
   
   <link rel="stylesheet" href="../dist/sticky.css">
   <link rel="stylesheet" href="css/style.css">
-  <script type="text/javascript" src="../dist/sticky.helper.ie8.js"></script>
-  <script type="text/javascript" src="../dist/sticky.helper.js"></script>
+  <script type="text/javascript" src="../dist/sticky-helper.ie8.js"></script>
   <script type="text/javascript" src="../dist/sticky.js"></script>
 </head>
 <body>
 <div class="page">
   <div class="container">
-    <header class="header">Header</header>
+    <div class="header">Header</div>
     <h2 class="main-heading">Sticky</h2>
     <div class="sticky-grid sticky-container-left-1">
       <div class="first">
@@ -92,13 +91,14 @@
 <script>
   var header = document.querySelector('.header');
   window.addEventListener('scroll', function () {
+    var headerClassName = header.className;
     if (window.pageYOffset > 0) {
-      if (!header.classList.contains('fixed')) {
-        header.classList.add('fixed');
+      if (headerClassName.indexOf('fixed') === -1) {
+        header.className += ' fixed';
       }
     } else {
-      if (header.classList.contains('fixed')) {
-        header.classList.remove('fixed');
+      if (headerClassName.indexOf('fixed') !== -1) {
+        header.className = headerClassName.replace('fixed', '');
       }
     }
   });

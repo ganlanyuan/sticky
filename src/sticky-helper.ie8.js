@@ -1,5 +1,5 @@
 /**
-  * sticky.helper.ie8
+  * sticky-helper.ie8
   *
   * @author William Lin
   * @license The MIT License (MIT)
@@ -10,4 +10,4 @@
 // @codekit-prepend "../bower_components/fix-ie/src/IE8-offsets.js";
 // @codekit-prepend "../bower_components/fix-ie/src/IE8-getComputedStyle.js";
 // @codekit-prepend "../bower_components/fix-ie/src/es5-arrays.js";
-// @codekit-prepend "components/IE8-addEventListener.js";
+// @codekit-prepend "../bower_components/go-native/src/components/IE8-addEventListener.js";

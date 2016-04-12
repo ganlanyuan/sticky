@@ -1,5 +1,8 @@
 ## Change log
 
+#### v0.1.0
+- Improved: rewrite with Prototype Pattern.
+
 #### v0.0.2
 - Fixed: a `bower.json` syntax issue.
 - Renamed: `.js-sticky-wrapper` to `.js-sticky-container`.

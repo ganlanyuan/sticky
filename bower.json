@@ -3,9 +3,7 @@
   "version": "0.0.2",
   "main": [
     "/dist/sticky.css",
-    "/dist/sticky.js",
-    "/dist/sticky.helper.js",
-    "/dist/sticky.helper.ie8.js"
+    "/dist/sticky.js"
   ],
   "keywords": [
     "sticky"
@@ -33,5 +31,8 @@
     "type": "git",
     "url": "https://github.com/ganlanyuan/sticky.git"
   },
-  "dependencies": {}
+  "dependencies": {
+    "go-native": "^0.0.1"
+  },
+  "devDependencies": {}
 }

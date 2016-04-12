@@ -18,7 +18,16 @@ bower install sticky-elements --save
 
 ## Usage
 ##### 1. Include sticky
-Include sticky (css, js) and [go-native](https://github.com/ganlanyuan/go-native) (10k),
+Include sticky (css, js)
+```html
+<link rel="stylesheet" href="sticky.css">
+
+<!--[if (lt IE 9)]>
+  <script src="sticky-helper.ie8.js"></script>
+<![endif]-->
+<script src="sticky.js"></script>
+```
+Or sticky (css, js) and [go-native](https://github.com/ganlanyuan/go-native) (10k),
 ```html
 <link rel="stylesheet" href="sticky.css">
 
@@ -26,17 +35,7 @@ Include sticky (css, js) and [go-native](https://github.com/ganlanyuan/go-native
   <script src="go-native.ie8.js"></script>
 <![endif]-->
 <script src="go-native.js"></script>
-<script src="sticky.js"></script>
-```
-or sticky (css, js) and [sticky.helper](https://github.com/ganlanyuan/sticky/tree/master/dist) (3k).
-```html
-<link rel="stylesheet" href="sticky.css">
-
-<!--[if (lt IE 9)]>
-  <script src="sticky.helper.ie8.js"></script>
-<![endif]-->
-<script src="sticky.helper.js"></script>
-<script src="sticky.js"></script>
+<script src="sticky.native.js"></script>
 ```
 ##### 2. Call sticky
 ```javascript
