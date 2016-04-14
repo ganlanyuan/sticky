@@ -33,6 +33,6 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "go-native": "^0.0.1"
+    "go-native": "0.0.2"
   }
 }
