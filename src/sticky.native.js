@@ -1,7 +1,7 @@
 /**
   * sticky (works with go-native)
   *
-  * v0.1.1
+  * v0.1.2
   * @author William Lin
   * @license The MIT License (MIT)
   * https://github.com/ganlanyuan/sticky
@@ -102,9 +102,14 @@ var sticky = (function () {
     // wrap sticky with a new <div>
     // to track sticky width and BoundingClientRect
     init: function () {
-      this.jsWrapper = document.createElement('div');
-      this.jsWrapper.className = 'js-sticky-container';
-      gn.wrap(this.sticky, this.jsWrapper);
+      var parent = this.sticky.parentNode;
+      if (parent.className.indexOf('sticky-container') !== -1) {
+        this.jsWrapper = parent;
+      } else {
+        this.jsWrapper = document.createElement('div');
+        this.jsWrapper.className = 'js-sticky-container';
+        gn.wrap(this.sticky, this.jsWrapper);
+      }
 
       this.initialized = true;
     },

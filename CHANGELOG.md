@@ -1,5 +1,13 @@
 ## Change log
 
+#### v0.1.2
+- Fixed: an ads rendering issue because of DOM updating. Now you can set sticky container manually by wrap sticky element with a `.sticky-container`.
+```html
+<div class="sticky-container">
+  <div class="your-sticky"></div>
+</div>
+```
+
 #### v0.1.1
 - Update bower.json: move `go-native` from dependencies to devDependencies.
 

@@ -1,5 +1,5 @@
 ## Sticky
-![version](https://img.shields.io/badge/Version-0.1.1-blue.svg)  
+![version](https://img.shields.io/badge/Version-0.1.2-blue.svg)  
 Make elements stay visible within its container. Similar with CSS `position: sticky`.  
 [demo](http://creatiointl.org/gallery/william/sticky/v0/tests/)  
 [changelog](https://github.com/ganlanyuan/sticky/blob/master/CHANGELOG.md)  
