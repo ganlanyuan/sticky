@@ -3,12 +3,13 @@
 
 .js-sticky {
   box-sizing: border-box;
-  &-container {
-    &:before,
-    &:after {
-      content: '';
-      display: table;
-      clear: both;
-    }
+}
+.js-sticky-container, 
+.sticky-container {
+  &:before,
+  &:after {
+    content: '';
+    display: table;
+    clear: both;
   }
 }
