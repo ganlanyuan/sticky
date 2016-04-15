@@ -37,7 +37,15 @@ Or sticky.native (css, js) and [go-native](https://github.com/ganlanyuan/go-nati
 <script src="go-native.js"></script>
 <script src="sticky.native.js"></script>
 ```
-##### 2. Call sticky
+##### 2. Wrap sticky element (optional)
+Wrap the sticky element with a **.sticky-container**.
+```html
+<div class="sticky-container">
+  <div class="my-sticky"></div>
+</div>
+```
+
+##### 3. Call sticky
 ```javascript
 sticky({
   sticky: '.my-sticky', 
