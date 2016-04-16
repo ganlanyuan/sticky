@@ -1,5 +1,8 @@
 ## Change log
 
+#### v0.1.3
+- Fixed: an Array issue that only return the last sticky object no matter how many sticky elements are passed in.
+
 #### v0.1.2
 - Fixed: an ads rendering issue because of DOM updating. Now you can set sticky container manually by wrap sticky element with a `.sticky-container`.
 ```html

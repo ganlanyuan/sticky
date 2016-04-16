@@ -1,7 +1,7 @@
 /**
   * sticky (works with go-native)
   *
-  * v0.1.2
+  * v0.1.3
   * @author William Lin
   * @license The MIT License (MIT)
   * https://github.com/ganlanyuan/sticky
@@ -38,15 +38,19 @@ var sticky = (function () {
       breakpoints: false,
     }, options || {});
 
-    var stickyEls = document.querySelectorAll(options.sticky);
+    var stickyEls = document.querySelectorAll(options.sticky),
+        arr = [];
     if (stickyEls.length === 0) { return; }
 
     for (var i = stickyEls.length; i--;) {
       var newOptions = options;
       newOptions.sticky = stickyEls[i];
 
-      return new Core(newOptions);
+      var a = new Core(newOptions);
+      arr.unshift(a);
     }
+
+    return arr;
   }
 
   function Core (options) {
