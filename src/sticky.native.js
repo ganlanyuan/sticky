@@ -41,7 +41,9 @@ var sticky = (function () {
     var BP = options.breakpoints,
         CONTAINER = (options.container) ? document.querySelector(options.container) : false,
         PADDING = options.padding,
-        POSITION = options.position;
+        POSITION = options.position,
+        WINDOWWIDTH = window.innerWidth,
+        WINDOWHEIGHT = window.innerHeight;
 
     function Core (sticky) {
       this.sticky = sticky;
@@ -104,7 +106,7 @@ var sticky = (function () {
         if (POSITION === 'top') {
           return PADDING;
         } else {
-          return this.windowHeight - PADDING;
+          return WINDOWHEIGHT - PADDING;
         }
       },
 
@@ -117,7 +119,7 @@ var sticky = (function () {
           if (POSITION === 'top') {
             return  this.stickyHeight + PADDING;
           } else {
-            return this.windowHeight;
+            return WINDOWHEIGHT;
           }
         }
       },
@@ -138,7 +140,6 @@ var sticky = (function () {
         // update sizes, position and breakpoints
         this.stickyWidth = this.jsWrapper.clientWidth - left - right;
         this.stickyHeight = this.sticky.offsetHeight + top + bottom;
-        this.windowHeight = window.innerHeight;
 
         this.fixedBreakpoint = this.getFixedBreakpoint();
         this.absoluteBreakpoint = this.getAbsoluteBreakpoint();
@@ -176,15 +177,15 @@ var sticky = (function () {
         if (!BP) {
           return true;
         } else if (typeof BP === 'number') {
-          return this.windowWidth >= BP;
+          return WINDOWWIDTH >= BP;
         } else if (Array.isArray(BP)) {
           switch (BP.length) {
             case 2:
-              return this.windowWidth >= BP[0] && this.windowWidth < BP[1];
+              return WINDOWWIDTH >= BP[0] && WINDOWWIDTH < BP[1];
             case 3:
-              return this.windowWidth >= BP[0] && this.windowWidth < BP[1] || this.windowWidth >= BP[2];
+              return WINDOWWIDTH >= BP[0] && WINDOWWIDTH < BP[1] || WINDOWWIDTH >= BP[2];
             case 4:
-              return this.windowWidth >= BP[0] && this.windowWidth < BP[1] || this.windowWidth >= BP[2] && this.windowWidth < BP[3];
+              return WINDOWWIDTH >= BP[0] && WINDOWWIDTH < BP[1] || WINDOWWIDTH >= BP[2] && WINDOWWIDTH < BP[3];
           }
         }
       },
@@ -194,7 +195,6 @@ var sticky = (function () {
       // if so, wrap sticky with new <div> and store size information
       // otherwise，unwrap <div> and initialize variables
       onLoad: function () {
-        this.windowWidth = window.innerWidth;
         this.inRange = this.checkRange();
 
         if (this.inRange && !this.initialized) {
@@ -217,6 +217,9 @@ var sticky = (function () {
       // same things with onload, but always need to chase size information to update sticky status,
       // and update sticky width while it's pinned or following
       onResize: function () {
+        if (window.innerWidth !== WINDOWWIDTH) { WINDOWWIDTH = window.innerWidth; }
+        if (window.innerHeight !== WINDOWHEIGHT) { WINDOWHEIGHT = window.innerHeight; }
+
         this.onLoad();
 
         if (this.initialized) {
