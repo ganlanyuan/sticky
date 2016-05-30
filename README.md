@@ -4,8 +4,8 @@ Make elements stay visible within its container. Similar with CSS `position: sti
 [demo](http://creatiointl.org/gallery/william/sticky/v0/tests/)  
 [changelog](https://github.com/ganlanyuan/sticky/blob/master/CHANGELOG.md)  
 
-## Why don't use `position: sticky`?
-- Limited browser support, see [here](http://caniuse.com/#search=sticky).
+## Why not `position: sticky`?
+- Limited browsers' support, see [here](http://caniuse.com/#search=sticky).
 - `position: sticky` only support direct parent element as container for now. 
   - If parent element has the same height with sticky element, there will be no sticky effect.
   - You can not set other container rather than direct parent element.   
