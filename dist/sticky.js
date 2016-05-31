@@ -1,11 +1,3 @@
-Date.now                = Date.now                || function(){return +new Date};
-String.prototype.trim   = String.prototype.trim   || function(){return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "");};
-Object.defineProperties = Object.defineProperties || function(obj, props){for(var i in props) Object.defineProperty(obj, i, props[i]);};
-Array.isArray           = Array.isArray           || function(obj){return "[object Array]" === Object.prototype.toString.call(obj)};
-Number.isNaN            = Number.isNaN            || function(val){return val !== val};
-String.prototype.repeat = String.prototype.repeat || function(num){return Array(num + 1).join(this)};
-
-
 // Adapted from https://gist.github.com/paulirish/1579671 which derived from 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
@@ -191,12 +183,17 @@ window.Length = {
 }(this, this.document));
 
 // *** gn *** //
-var gn = {};
+var gn = (function (g) {
 
-/** 
-  * optimizedResize
-  * https://developer.mozilla.org/en-US/docs/Web/Events/resize#requestAnimationFrame
-  */
+  // return gn
+  return g;
+})(window.gn || {});
+
+// optimizedResize
+// https://developer.mozilla.org/en-US/docs/Web/Events/resize#requestAnimationFrame
+// @require "/src/gn/gn.js"
+// @require "/src/ie8/es5/arrays/forEach.js"
+// @require "/src/ie8/addEventListener.js"
 
 gn.optimizedResize = (function() {
 
@@ -249,11 +246,13 @@ gn.optimizedResize = (function() {
 }());
 
 // start process
-// optimizedResize.add(function() {
+// gn.optimizedResize.add(function() {
 //   console.log('Resource conscious resize callback!')
 // });
 
-/* extend */
+// extend
+// @require "/src/gn/gn.js"
+
 gn.extend = function () {
   var obj, name, copy,
   target = arguments[0] || {},
@@ -276,14 +275,36 @@ gn.extend = function () {
   return target;
 };
 
-/** isNodeList **/
+// DOM ready
+// @require "/src/gn/gn.js"
+
+gn.ready = function ( fn ) {
+
+  // Sanity check
+  if ( typeof fn !== 'function' ) { return; }
+
+  // If document is already loaded, run method
+  if ( document.readyState === 'complete'  ) {
+    return fn();
+  }
+
+  // Otherwise, wait until document is loaded
+  document.addEventListener( 'DOMContentLoaded', fn, false );
+};
+
+// isNodeList
+// @require "/src/gn/gn.js"
+
 gn.isNodeList = function (el) {
   // Only NodeList has the "item()" function
   return typeof el.item !== 'undefined'; 
 };
 
 
-/** wrap **/
+// wrap
+// @require "/src/gn/gn.js"
+// @require "/src/gn/isNodeList.js"
+
 gn.wrap = function (els, obj) {
     var elsNew = (gn.isNodeList(els)) ? els : [els];
   // Loops backwards to prevent having to clone the wrapper on the
@@ -312,7 +333,10 @@ gn.wrap = function (els, obj) {
 
 
 
-/* unwrap */
+// unwrap
+// @require "/src/gn/gn.js"
+// @require "/src/gn/isNodeList.js"
+
 gn.unwrap = function (els) {
   var elsNew = (gn.isNodeList(els)) ? els : [els];
   for (var i = elsNew.length; i--;) {
@@ -331,33 +355,27 @@ gn.unwrap = function (els) {
   }
 };
 
+
+// @codekit-prepend "../bower_components/requestAnimationFrame/requestAnimationFrame.js";
+// @codekit-prepend "../bower_components/Units/Length.js";
+
+// @codekit-prepend "../bower_components/go-native/src/gn/base.js";
+// @codekit-prepend "../bower_components/go-native/src/gn/optimizedResize.js";
+// @codekit-prepend "../bower_components/go-native/src/gn/extend.js";
+// @codekit-prepend "../bower_components/go-native/src/gn/DOM.ready.js";
+
+// @codekit-prepend "../bower_components/go-native/src/gn/isNodeList.js";
+// @codekit-prepend "../bower_components/go-native/src/gn/wrap.js";
+// @codekit-prepend "../bower_components/go-native/src/gn/unwrap.js";
+
 /**
-  * sticky (works with go-native)
+  * sticky.native (works with go-native)
   *
-  * v0.1.3
+  * v0.1.4
   * @author William Lin
   * @license The MIT License (MIT)
   * https://github.com/ganlanyuan/sticky
   */
-
-// DEPENDENCIES:
-//
-// == IE8 ==
-// html5shiv
-// ES5-arrays
-// addEventListener
-// window.getComputedStyle
-// window.innerHeight
-//
-// == all ==
-// Array.isArray
-// requestAnimationFrame
-// optimizedResize
-// extend
-// Length
-// isNodeList
-// wrap
-// unwrap
 
 var sticky = (function () {
   'use strict';
@@ -372,7 +390,7 @@ var sticky = (function () {
     }, options || {});
 
     var BP = options.breakpoints,
-        CONTAINER = (options.container) ? document.querySelector(options.container) : false,
+        CONTAINER,
         PADDING = options.padding,
         POSITION = options.position,
         WINDOWWIDTH = window.innerWidth,
@@ -382,31 +400,29 @@ var sticky = (function () {
       this.sticky = sticky;
       this.stickyClassNames = this.sticky.className;
 
-      this.inRange = false;
-      this.initialized = false;
-      this.isSticky = false;
-      this.fixed = false;
-      this.absolute = false;
+      this.isInRange = false;
+      this.isWrapped = false;
+      this.isSticking = false;
+      this.isFixed = false;
+      this.isAbsolute = false;
       this.stickyRectEdge = 0;
       this.containerRectEdge = false;
 
-      var scope = this;
-      window.addEventListener('load', function () { 
-        scope.onLoad(); 
-      });
+      this.init(); 
 
+      var scope = this;
       gn.optimizedResize.add(function () { 
         scope.onResize(); 
       });
 
       window.addEventListener('scroll', function () { 
         scope.ticking = false;
-        if (!scope.initialized) { return; }
+        if (!scope.isWrapped) { return; }
         scope.stickyRectEdge = scope.jsWrapper.getBoundingClientRect()[POSITION];
         scope.containerRectEdge = (CONTAINER) ? CONTAINER.getBoundingClientRect().bottom : false;
         if (!scope.ticking) {
           window.requestAnimationFrame(function () {
-            if (scope.initialized) {
+            if (scope.isWrapped) {
               scope.onScroll(); 
             }
             scope.ticking = false;
@@ -417,10 +433,9 @@ var sticky = (function () {
     }
 
     Core.prototype = {
-      // init: 
       // wrap sticky with a new <div>
       // to track sticky width and BoundingClientRect
-      init: function () {
+      wrapSticky: function () {
         var parent = this.sticky.parentNode;
         if (parent.className.indexOf('sticky-container') !== -1) {
           this.jsWrapper = parent;
@@ -430,7 +445,7 @@ var sticky = (function () {
           gn.wrap(this.sticky, this.jsWrapper);
         }
 
-        this.initialized = true;
+        this.isWrapped = true;
       },
 
       // get pinned / fixed breakpoint
@@ -474,8 +489,8 @@ var sticky = (function () {
         this.stickyWidth = this.jsWrapper.clientWidth - left - right;
         this.stickyHeight = this.sticky.offsetHeight + top + bottom;
 
-        this.fixedBreakpoint = this.getFixedBreakpoint();
-        this.absoluteBreakpoint = this.getAbsoluteBreakpoint();
+        this.isFixedBreakpoint = this.getFixedBreakpoint();
+        this.isAbsoluteBreakpoint = this.getAbsoluteBreakpoint();
       },
 
       // destory:
@@ -487,22 +502,22 @@ var sticky = (function () {
         this.sticky.style[POSITION] = '';
         gn.unwrap(this.jsWrapper);
 
-        if (this.isSticky) {
+        if (this.isSticking) {
           this.sticky.className = this.sticky.className.replace(' js-sticky', '');
           this.sticky.style.position = '';
           this.sticky.style.width = '';
           this.sticky.style.top = '';
           this.sticky.style.bottom = '';
-          this.isSticky = false;
-          this.fixed = false;
-          this.absolute = false;
+          this.isSticking = false;
+          this.isFixed = false;
+          this.isAbsolute = false;
         }
 
-        this.inRange = false;
-        this.initialized = false;
-        this.isSticky = false;
-        this.fixed = false;
-        this.absolute = false;
+        this.isInRange = false;
+        this.isWrapped = false;
+        this.isSticking = false;
+        this.isFixed = false;
+        this.isAbsolute = false;
       },
 
       // check if the window size is in the range
@@ -523,39 +538,39 @@ var sticky = (function () {
         }
       },
 
-      // onload:
+      // init:
       // check if the window is in the range
       // if so, wrap sticky with new <div> and store size information
       // otherwise，unwrap <div> and initialize variables
-      onLoad: function () {
-        this.inRange = this.checkRange();
+      init: function () {
+        this.isInRange = this.checkRange();
 
-        if (this.inRange && !this.initialized) {
-          this.init();
+        if (this.isInRange && !this.isWrapped) {
+          this.wrapSticky();
           this.updateSizes();
-        } else if (!this.inRange && this.initialized) {
+        } else if (!this.isInRange && this.isWrapped) {
           this.destory();
         }
 
-        if (this.initialized) {
+        if (this.isWrapped) {
           this.stickyRectEdge = this.jsWrapper.getBoundingClientRect()[POSITION];
           this.containerRectEdge = (CONTAINER) ? CONTAINER.getBoundingClientRect().bottom : false;
 
           this.onScroll();
-          if (this.isSticky) { this.sticky.style.width = this.stickyWidth + 'px'; }
+          if (this.isSticking) { this.sticky.style.width = this.stickyWidth + 'px'; }
         }
       },
 
       // onresize:
-      // same things with onload, but always need to chase size information to update sticky status,
+      // same things with init, but always need to check size information to update sticky status,
       // and update sticky width while it's pinned or following
       onResize: function () {
         if (window.innerWidth !== WINDOWWIDTH) { WINDOWWIDTH = window.innerWidth; }
         if (window.innerHeight !== WINDOWHEIGHT) { WINDOWHEIGHT = window.innerHeight; }
 
-        this.onLoad();
+        this.init();
 
-        if (this.initialized) {
+        if (this.isWrapped) {
           this.updateSizes();
         }
       },
@@ -565,31 +580,31 @@ var sticky = (function () {
       // the adventage of using getBoundingClientRect().top instead of offsetTop is scope the sticky will not be affected by other element's height changing while scrolling
       // e.g. when window scroll down, the header become fixed positioned, thus height property become 0
       onScroll: function () {
-        if (this.stickyRectEdge > this.fixedBreakpoint) {
+        if (this.stickyRectEdge > this.isFixedBreakpoint) {
           // normal - non-sticky
           // reset position, top, bottom, width, height
-          if (this.isSticky) {
+          if (this.isSticking) {
             this.sticky.className = this.sticky.className.replace(' js-sticky', '');
             this.jsWrapper.style.height = '';
             this.sticky.style.position = '';
             this.sticky.style.width = '';
             this.sticky.style.top = '';
             this.sticky.style.bottom = '';
-            this.isSticky = false;
-            this.fixed = false;
-            this.absolute = false;
+            this.isSticking = false;
+            this.isFixed = false;
+            this.isAbsolute = false;
           }
         } else {
           // add .js-sticky, set width, height
-          if (!this.isSticky) {
+          if (!this.isSticking) {
             this.sticky.className += ' js-sticky';
             this.sticky.style.width = this.stickyWidth + 'px';
             this.jsWrapper.style.height = this.stickyHeight + 'px';
-            this.isSticky = true;
+            this.isSticking = true;
           }
 
           if (CONTAINER) {
-            if (!this.fixed && this.stickyRectEdge <= this.fixedBreakpoint && this.containerRectEdge > this.absoluteBreakpoint) {
+            if (!this.isFixed && this.stickyRectEdge <= this.isFixedBreakpoint && this.containerRectEdge > this.isAbsoluteBreakpoint) {
               // fixed (with container):
               // remove container relative-position
               CONTAINER.style.position = '';
@@ -598,9 +613,9 @@ var sticky = (function () {
               if (POSITION === 'top') {
                 this.sticky.style.bottom = '';
               }
-              this.fixed = true;
-              this.absolute = false;
-            } else if (!this.absolute && this.containerRectEdge <= this.absoluteBreakpoint) {
+              this.isFixed = true;
+              this.isAbsolute = false;
+            } else if (!this.isAbsolute && this.containerRectEdge <= this.isAbsoluteBreakpoint) {
               // absolute:
               CONTAINER.style.position = 'relative';
               this.sticky.style.position = 'absolute';
@@ -608,31 +623,40 @@ var sticky = (function () {
                 this.sticky.style.top = '';
                 this.sticky.style.bottom = '0px';
               }
-              this.fixed = false;
-              this.absolute = true;
+              this.isFixed = false;
+              this.isAbsolute = true;
             }
           } else {
             // fixed (without container)
-            if (!this.fixed && this.stickyRectEdge <= this.fixedBreakpoint) {
+            if (!this.isFixed && this.stickyRectEdge <= this.isFixedBreakpoint) {
               this.sticky.style.position = 'fixed';
               this.sticky.style[POSITION] = PADDING + 'px';
-              this.fixed = true;
+              this.isFixed = true;
             }
           }
         }
       },
     };
 
-    var stickyEls = document.querySelectorAll(options.sticky),
-        arr = [];
-    if (stickyEls.length === 0) { return; }
+    gn.ready(function () {
+      // get sticky elements on dom ready
+      var stickyEls = document.querySelectorAll(options.sticky),
+          arr = [];
+      // if not sticky element been found, do nothing
+      if (stickyEls.length === 0) { 
+        throw new Error('"' + options.sticky + '" doesn\'t exist.');
+      }
 
-    for (var i = stickyEls.length; i--;) {
-      var a = new Core(stickyEls[i]);
-      arr.unshift(a);
-    }
+      // get CONTAINER on dom ready
+      CONTAINER = (options.container) ? document.querySelector(options.container) : false;
 
-    return arr;
+      for (var i = stickyEls.length; i--;) {
+        arr.push(new Core(stickyEls[i]));
+      }
+
+      // return sticky Array
+      return arr;
+    });
   };
 
 })();
@@ -640,23 +664,12 @@ var sticky = (function () {
 /**
   * sticky 
   *
-  * v0.1.3
+  * v0.1.4
   * @author William Lin
   * @license The MIT License (MIT)
   * https://github.com/ganlanyuan/sticky
   */
 
-// @codekit-prepend "../bower_components/fix-ie/src/es5-methods.js";
-// @codekit-prepend "../bower_components/requestAnimationFrame/requestAnimationFrame.js";
-// @codekit-prepend "../bower_components/Units/Length.js";
-// @codekit-prepend "../bower_components/go-native/src/components/gn.js";
-// @codekit-prepend "../bower_components/go-native/src/components/optimizedResize.js";
-// @codekit-prepend "../bower_components/go-native/src/components/extend.js";
-// @codekit-prepend "../bower_components/go-native/src/components/isNodeList.js";
-// @codekit-prepend "../bower_components/go-native/src/components/wrap.js";
-// @codekit-prepend "../bower_components/go-native/src/components/unwrap.js";
-
+// @codekit-prepend "sticky-helper.js";
 // @codekit-prepend "sticky.native.js";
-
-
 

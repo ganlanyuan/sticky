@@ -1,9 +1,293 @@
 /**
-  * sticky (works with go-native)
+  * sticky.native (works with go-native)
   *
-  * v0.1.3
+  * v0.1.4
   * @author William Lin
   * @license The MIT License (MIT)
   * https://github.com/ganlanyuan/sticky
   */
-var sticky=function(){"use strict";return function(t){function i(t){this.sticky=t,this.stickyClassNames=this.sticky.className,this.inRange=!1,this.initialized=!1,this.isSticky=!1,this.fixed=!1,this.absolute=!1,this.stickyRectEdge=0,this.containerRectEdge=!1;var i=this;window.addEventListener("load",function(){i.onLoad()}),gn.optimizedResize.add(function(){i.onResize()}),window.addEventListener("scroll",function(){i.ticking=!1,i.initialized&&(i.stickyRectEdge=i.jsWrapper.getBoundingClientRect()[c],i.containerRectEdge=e?e.getBoundingClientRect().bottom:!1,i.ticking||window.requestAnimationFrame(function(){i.initialized&&i.onScroll(),i.ticking=!1}),i.ticking=!0)})}t=gn.extend({sticky:".sticky",container:!1,padding:0,position:"top",breakpoints:!1},t||{});var s=t.breakpoints,e=t.container?document.querySelector(t.container):!1,n=t.padding,c=t.position,h=window.innerWidth,o=window.innerHeight;i.prototype={init:function(){var t=this.sticky.parentNode;-1!==t.className.indexOf("sticky-container")?this.jsWrapper=t:(this.jsWrapper=document.createElement("div"),this.jsWrapper.className="js-sticky-container",gn.wrap(this.sticky,this.jsWrapper)),this.initialized=!0},getFixedBreakpoint:function(){return"top"===c?n:o-n},getAbsoluteBreakpoint:function(){return e?"top"===c?this.stickyHeight+n:o:!1},updateSizes:function(){var t=window.getComputedStyle(this.sticky),i=/\d/,s=null===i.exec(t.marginLeft)?0:parseInt(Length.toPx(sticky,t.marginLeft)),e=null===i.exec(t.marginRight)?0:parseInt(Length.toPx(sticky,t.marginRight)),n=null===i.exec(t.marginTop)?0:parseInt(Length.toPx(sticky,t.marginTop)),c=null===i.exec(t.marginBottom)?0:parseInt(Length.toPx(sticky,t.marginBottom));this.stickyWidth=this.jsWrapper.clientWidth-s-e,this.stickyHeight=this.sticky.offsetHeight+n+c,this.fixedBreakpoint=this.getFixedBreakpoint(),this.absoluteBreakpoint=this.getAbsoluteBreakpoint()},destory:function(){this.sticky.className=this.stickyClassNames,this.sticky.style.width="",this.sticky.style[c]="",gn.unwrap(this.jsWrapper),this.isSticky&&(this.sticky.className=this.sticky.className.replace(" js-sticky",""),this.sticky.style.position="",this.sticky.style.width="",this.sticky.style.top="",this.sticky.style.bottom="",this.isSticky=!1,this.fixed=!1,this.absolute=!1),this.inRange=!1,this.initialized=!1,this.isSticky=!1,this.fixed=!1,this.absolute=!1},checkRange:function(){if(!s)return!0;if("number"==typeof s)return h>=s;if(Array.isArray(s))switch(s.length){case 2:return h>=s[0]&&h<s[1];case 3:return h>=s[0]&&h<s[1]||h>=s[2];case 4:return h>=s[0]&&h<s[1]||h>=s[2]&&h<s[3]}},onLoad:function(){this.inRange=this.checkRange(),this.inRange&&!this.initialized?(this.init(),this.updateSizes()):!this.inRange&&this.initialized&&this.destory(),this.initialized&&(this.stickyRectEdge=this.jsWrapper.getBoundingClientRect()[c],this.containerRectEdge=e?e.getBoundingClientRect().bottom:!1,this.onScroll(),this.isSticky&&(this.sticky.style.width=this.stickyWidth+"px"))},onResize:function(){window.innerWidth!==h&&(h=window.innerWidth),window.innerHeight!==o&&(o=window.innerHeight),this.onLoad(),this.initialized&&this.updateSizes()},onScroll:function(){this.stickyRectEdge>this.fixedBreakpoint?this.isSticky&&(this.sticky.className=this.sticky.className.replace(" js-sticky",""),this.jsWrapper.style.height="",this.sticky.style.position="",this.sticky.style.width="",this.sticky.style.top="",this.sticky.style.bottom="",this.isSticky=!1,this.fixed=!1,this.absolute=!1):(this.isSticky||(this.sticky.className+=" js-sticky",this.sticky.style.width=this.stickyWidth+"px",this.jsWrapper.style.height=this.stickyHeight+"px",this.isSticky=!0),e?!this.fixed&&this.stickyRectEdge<=this.fixedBreakpoint&&this.containerRectEdge>this.absoluteBreakpoint?(e.style.position="",this.sticky.style.position="fixed",this.sticky.style[c]=n+"px","top"===c&&(this.sticky.style.bottom=""),this.fixed=!0,this.absolute=!1):!this.absolute&&this.containerRectEdge<=this.absoluteBreakpoint&&(e.style.position="relative",this.sticky.style.position="absolute","top"===c&&(this.sticky.style.top="",this.sticky.style.bottom="0px"),this.fixed=!1,this.absolute=!0):!this.fixed&&this.stickyRectEdge<=this.fixedBreakpoint&&(this.sticky.style.position="fixed",this.sticky.style[c]=n+"px",this.fixed=!0))}};var a=document.querySelectorAll(t.sticky),r=[];if(0!==a.length){for(var y=a.length;y--;){var d=new i(a[y]);r.unshift(d)}return r}}}();
+
+var sticky = (function () {
+  'use strict';
+
+  return function (options) {
+    options = gn.extend({ 
+      sticky: '.sticky',
+      container: false,
+      padding: 0,
+      position: 'top',
+      breakpoints: false,
+    }, options || {});
+
+    var BP = options.breakpoints,
+        CONTAINER,
+        PADDING = options.padding,
+        POSITION = options.position,
+        WINDOWWIDTH = window.innerWidth,
+        WINDOWHEIGHT = window.innerHeight;
+
+    function Core (sticky) {
+      this.sticky = sticky;
+      this.stickyClassNames = this.sticky.className;
+
+      this.isInRange = false;
+      this.isWrapped = false;
+      this.isSticking = false;
+      this.isFixed = false;
+      this.isAbsolute = false;
+      this.stickyRectEdge = 0;
+      this.containerRectEdge = false;
+
+      this.init(); 
+
+      var scope = this;
+      gn.optimizedResize.add(function () { 
+        scope.onResize(); 
+      });
+
+      window.addEventListener('scroll', function () { 
+        scope.ticking = false;
+        if (!scope.isWrapped) { return; }
+        scope.stickyRectEdge = scope.jsWrapper.getBoundingClientRect()[POSITION];
+        scope.containerRectEdge = (CONTAINER) ? CONTAINER.getBoundingClientRect().bottom : false;
+        if (!scope.ticking) {
+          window.requestAnimationFrame(function () {
+            if (scope.isWrapped) {
+              scope.onScroll(); 
+            }
+            scope.ticking = false;
+          });
+        }
+        scope.ticking = true;
+      });
+    }
+
+    Core.prototype = {
+      // wrap sticky with a new <div>
+      // to track sticky width and BoundingClientRect
+      wrapSticky: function () {
+        var parent = this.sticky.parentNode;
+        if (parent.className.indexOf('sticky-container') !== -1) {
+          this.jsWrapper = parent;
+        } else {
+          this.jsWrapper = document.createElement('div');
+          this.jsWrapper.className = 'js-sticky-container';
+          gn.wrap(this.sticky, this.jsWrapper);
+        }
+
+        this.isWrapped = true;
+      },
+
+      // get pinned / fixed breakpoint
+      // based on sticky getBoundingClientRect().top/bottom
+      getFixedBreakpoint: function () {
+        if (POSITION === 'top') {
+          return PADDING;
+        } else {
+          return WINDOWHEIGHT - PADDING;
+        }
+      },
+
+      // get followed / absolute breakpoint
+      // based on container getBoundingClientRect().bottom
+      getAbsoluteBreakpoint: function () {
+        if (!CONTAINER) {
+          return false;
+        } else {
+          if (POSITION === 'top') {
+            return  this.stickyHeight + PADDING;
+          } else {
+            return WINDOWHEIGHT;
+          }
+        }
+      },
+
+      // update sizes:
+      // get sticky, container and window information to calculate
+      // two breakpoints: pinned to window / follow container
+      // 
+      // do this on document load & window resize
+      updateSizes: function () {
+        var style = window.getComputedStyle(this.sticky),
+            pattern = /\d/, // check if value contains digital number
+            left = (pattern.exec(style.marginLeft) === null) ? 0 : parseInt(Length.toPx(sticky, style.marginLeft)),
+            right = (pattern.exec(style.marginRight) === null) ? 0 : parseInt(Length.toPx(sticky, style.marginRight)),
+            top = (pattern.exec(style.marginTop) === null) ? 0 : parseInt(Length.toPx(sticky, style.marginTop)),
+            bottom = (pattern.exec(style.marginBottom) === null) ? 0 : parseInt(Length.toPx(sticky, style.marginBottom));
+
+        // update sizes, position and breakpoints
+        this.stickyWidth = this.jsWrapper.clientWidth - left - right;
+        this.stickyHeight = this.sticky.offsetHeight + top + bottom;
+
+        this.isFixedBreakpoint = this.getFixedBreakpoint();
+        this.isAbsoluteBreakpoint = this.getAbsoluteBreakpoint();
+      },
+
+      // destory:
+      // restore everything when window size is not in the range
+      // remove inserted <div>, classnames, styles and initialize ticking variables
+      destory: function () {
+        this.sticky.className = this.stickyClassNames;
+        this.sticky.style.width = '';
+        this.sticky.style[POSITION] = '';
+        gn.unwrap(this.jsWrapper);
+
+        if (this.isSticking) {
+          this.sticky.className = this.sticky.className.replace(' js-sticky', '');
+          this.sticky.style.position = '';
+          this.sticky.style.width = '';
+          this.sticky.style.top = '';
+          this.sticky.style.bottom = '';
+          this.isSticking = false;
+          this.isFixed = false;
+          this.isAbsolute = false;
+        }
+
+        this.isInRange = false;
+        this.isWrapped = false;
+        this.isSticking = false;
+        this.isFixed = false;
+        this.isAbsolute = false;
+      },
+
+      // check if the window size is in the range
+      checkRange: function () {
+        if (!BP) {
+          return true;
+        } else if (typeof BP === 'number') {
+          return WINDOWWIDTH >= BP;
+        } else if (Array.isArray(BP)) {
+          switch (BP.length) {
+            case 2:
+              return WINDOWWIDTH >= BP[0] && WINDOWWIDTH < BP[1];
+            case 3:
+              return WINDOWWIDTH >= BP[0] && WINDOWWIDTH < BP[1] || WINDOWWIDTH >= BP[2];
+            case 4:
+              return WINDOWWIDTH >= BP[0] && WINDOWWIDTH < BP[1] || WINDOWWIDTH >= BP[2] && WINDOWWIDTH < BP[3];
+          }
+        }
+      },
+
+      // init:
+      // check if the window is in the range
+      // if so, wrap sticky with new <div> and store size information
+      // otherwise，unwrap <div> and initialize variables
+      init: function () {
+        this.isInRange = this.checkRange();
+
+        if (this.isInRange && !this.isWrapped) {
+          this.wrapSticky();
+          this.updateSizes();
+        } else if (!this.isInRange && this.isWrapped) {
+          this.destory();
+        }
+
+        if (this.isWrapped) {
+          this.stickyRectEdge = this.jsWrapper.getBoundingClientRect()[POSITION];
+          this.containerRectEdge = (CONTAINER) ? CONTAINER.getBoundingClientRect().bottom : false;
+
+          this.onScroll();
+          if (this.isSticking) { this.sticky.style.width = this.stickyWidth + 'px'; }
+        }
+      },
+
+      // onresize:
+      // same things with init, but always need to check size information to update sticky status,
+      // and update sticky width while it's pinned or following
+      onResize: function () {
+        if (window.innerWidth !== WINDOWWIDTH) { WINDOWWIDTH = window.innerWidth; }
+        if (window.innerHeight !== WINDOWHEIGHT) { WINDOWHEIGHT = window.innerHeight; }
+
+        this.init();
+
+        if (this.isWrapped) {
+          this.updateSizes();
+        }
+      },
+
+      // onscroll:
+      // change sticky status based on sticky / container scrollTop
+      // the adventage of using getBoundingClientRect().top instead of offsetTop is scope the sticky will not be affected by other element's height changing while scrolling
+      // e.g. when window scroll down, the header become fixed positioned, thus height property become 0
+      onScroll: function () {
+        if (this.stickyRectEdge > this.isFixedBreakpoint) {
+          // normal - non-sticky
+          // reset position, top, bottom, width, height
+          if (this.isSticking) {
+            this.sticky.className = this.sticky.className.replace(' js-sticky', '');
+            this.jsWrapper.style.height = '';
+            this.sticky.style.position = '';
+            this.sticky.style.width = '';
+            this.sticky.style.top = '';
+            this.sticky.style.bottom = '';
+            this.isSticking = false;
+            this.isFixed = false;
+            this.isAbsolute = false;
+          }
+        } else {
+          // add .js-sticky, set width, height
+          if (!this.isSticking) {
+            this.sticky.className += ' js-sticky';
+            this.sticky.style.width = this.stickyWidth + 'px';
+            this.jsWrapper.style.height = this.stickyHeight + 'px';
+            this.isSticking = true;
+          }
+
+          if (CONTAINER) {
+            if (!this.isFixed && this.stickyRectEdge <= this.isFixedBreakpoint && this.containerRectEdge > this.isAbsoluteBreakpoint) {
+              // fixed (with container):
+              // remove container relative-position
+              CONTAINER.style.position = '';
+              this.sticky.style.position = 'fixed';
+              this.sticky.style[POSITION] = PADDING + 'px';
+              if (POSITION === 'top') {
+                this.sticky.style.bottom = '';
+              }
+              this.isFixed = true;
+              this.isAbsolute = false;
+            } else if (!this.isAbsolute && this.containerRectEdge <= this.isAbsoluteBreakpoint) {
+              // absolute:
+              CONTAINER.style.position = 'relative';
+              this.sticky.style.position = 'absolute';
+              if (POSITION === 'top') {
+                this.sticky.style.top = '';
+                this.sticky.style.bottom = '0px';
+              }
+              this.isFixed = false;
+              this.isAbsolute = true;
+            }
+          } else {
+            // fixed (without container)
+            if (!this.isFixed && this.stickyRectEdge <= this.isFixedBreakpoint) {
+              this.sticky.style.position = 'fixed';
+              this.sticky.style[POSITION] = PADDING + 'px';
+              this.isFixed = true;
+            }
+          }
+        }
+      },
+    };
+
+    gn.ready(function () {
+      // get sticky elements on dom ready
+      var stickyEls = document.querySelectorAll(options.sticky),
+          arr = [];
+      // if not sticky element been found, do nothing
+      if (stickyEls.length === 0) { 
+        throw new Error('"' + options.sticky + '" doesn\'t exist.');
+      }
+
+      // get CONTAINER on dom ready
+      CONTAINER = (options.container) ? document.querySelector(options.container) : false;
+
+      for (var i = stickyEls.length; i--;) {
+        arr.push(new Core(stickyEls[i]));
+      }
+
+      // return sticky Array
+      return arr;
+    });
+  };
+
+})();
+

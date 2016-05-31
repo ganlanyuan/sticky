@@ -1,9 +1,1 @@
-{
-	"version": 3,
-	"file": "sticky.css",
-	"sources": [
-		"../src/sticky.scss"
-	],
-	"mappings": "AAGA,UAAU,AAAC,CACT,UAAU,CAAE,UAAW,CACxB,AACD,oBAAoB,AAEjB,OAAO,CAFV,oBAAoB,AAGjB,MAAM,CAFT,iBAAiB,AACd,OAAO,CADV,iBAAiB,AAEd,MAAM,AAAC,CACN,OAAO,CAAE,EAAG,CACZ,OAAO,CAAE,KAAM,CACf,KAAK,CAAE,IAAK,CACb",
-	"names": []
-}
+{"version":3,"sources":["../src/sticky.scss"],"names":[],"mappings":"AAGA,WACE,qBAAuB,CACxB,wGAKG,WACA,cACA,UAAY,CACb","file":"sticky.css"}

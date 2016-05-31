@@ -1,5 +1,11 @@
 ## Change log
 
+#### v0.1.4
+- Fixed: a DOM element load issue.
+- Improved: update *go-native* to version 0.0.3.
+- Improved: better variables' name. 
+- Improved: throw error information when element can't be found.
+
 #### v0.1.3
 - Fixed: an Array issue that only return the last sticky object no matter how many sticky elements are passed in.
 

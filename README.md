@@ -1,5 +1,5 @@
 ## Sticky
-![version](https://img.shields.io/badge/Version-0.1.3-blue.svg)  
+![version](https://img.shields.io/badge/Version-0.1.4-blue.svg)  
 Make elements stay visible within its container. Similar with CSS `position: sticky`.  
 [demo](http://creatiointl.org/gallery/william/sticky/v0/tests/)  
 [changelog](https://github.com/ganlanyuan/sticky/blob/master/CHANGELOG.md)  
@@ -11,6 +11,7 @@ Make elements stay visible within its container. Similar with CSS `position: sti
   - You can not set other container rather than direct parent element.   
 
 But be aware of that native `position: sticky` has **better performance** and **no janking**.  
+
 ## Install
 ```
 bower install sticky-elements --save
@@ -22,20 +23,16 @@ Include sticky (css, js)
 ```html
 <link rel="stylesheet" href="sticky.css">
 
-<!--[if (lt IE 9)]>
-  <script src="sticky-helper.ie8.js"></script>
-<![endif]-->
-<script src="sticky.js"></script>
+<!--[if (lt IE 9)]><script src="sticky-helper.ie8.min.js"></script><![endif]-->
+<script src="sticky.min.js"></script>
 ```
 Or sticky.native (css, js) and [go-native](https://github.com/ganlanyuan/go-native) (10k),
 ```html
 <link rel="stylesheet" href="sticky.css">
 
-<!--[if (lt IE 9)]>
-  <script src="go-native.ie8.js"></script>
-<![endif]-->
+<!--[if (lt IE 9)]><script src="go-native.ie8.min.js"></script><![endif]-->
 <script src="go-native.js"></script>
-<script src="sticky.native.js"></script>
+<script src="sticky.native.min.js"></script>
 ```
 ##### 2. Wrap sticky element (optional)
 Wrap the sticky element with a **.sticky-container**.
