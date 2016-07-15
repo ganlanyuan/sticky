@@ -1,5 +1,8 @@
 ## Change log
 
+#### v0.1.5
+- Fixed: a breakpoint issue.
+
 #### v0.1.4
 - Fixed: a DOM element load issue.
 - Improved: update *go-native* to version 0.0.3.
