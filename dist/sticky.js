@@ -528,6 +528,8 @@ var sticky = (function () {
           return WINDOWWIDTH >= BP;
         } else if (Array.isArray(BP)) {
           switch (BP.length) {
+            case 1:
+              return WINDOWWIDTH >= BP[0];
             case 2:
               return WINDOWWIDTH >= BP[0] && WINDOWWIDTH < BP[1];
             case 3:
