@@ -16,6 +16,54 @@
   <link rel="stylesheet" href="css/style.css">
   <script type="text/javascript" src="../dist/sticky-helper.ie8.js"></script>
   <script type="text/javascript" src="../dist/sticky.js"></script>
+  <script>
+    gn.ready(function () {
+      var header = document.querySelector('.header');
+      window.addEventListener('scroll', function () {
+        var headerClassName = header.className;
+        if (window.pageYOffset > 0) {
+          if (headerClassName.indexOf('fixed') === -1) {
+            header.className += ' fixed';
+          }
+        } else {
+          if (headerClassName.indexOf('fixed') !== -1) {
+            header.className = headerClassName.replace('fixed', '');
+          }
+        }
+      });
+    });
+    
+    sticky({
+      sticky: '.sticky-left-1', 
+      container: '.sticky-container-left-1',
+      padding: 10,
+      position: 'top',
+      breakpoints: [600],
+    });
+
+    sticky({
+      sticky: '.sticky-middle-1', 
+      container: '.sticky-container-middle-1', 
+      padding: 10,
+    });
+    sticky({
+      sticky: '.sticky-right-1', 
+      container: '.sticky-container-right-1',
+      padding: 10,
+    });
+    sticky({
+      sticky: '.sticky-middle-2', 
+      container: '.sticky-container-middle-2', 
+      position: 'bottom',
+      padding: 10,
+    });
+    sticky({
+      sticky: '.sticky-right-2',  
+      container: '.sticky-container-right-2',
+      position: 'bottom',
+      padding: 10,
+    });
+  </script>
 </head>
 <body>
 <div class="page">
@@ -88,52 +136,6 @@
     </section>
   </div>
 </div>
-<script>
-  var header = document.querySelector('.header');
-  window.addEventListener('scroll', function () {
-    var headerClassName = header.className;
-    if (window.pageYOffset > 0) {
-      if (headerClassName.indexOf('fixed') === -1) {
-        header.className += ' fixed';
-      }
-    } else {
-      if (headerClassName.indexOf('fixed') !== -1) {
-        header.className = headerClassName.replace('fixed', '');
-      }
-    }
-  });
-  
-  sticky({
-    sticky: '.sticky-left-1', 
-    container: '.sticky-container-left-1',
-    padding: 10,
-    position: 'top',
-    breakpoints: [600],
-  });
-
-  sticky({
-    sticky: '.sticky-middle-1', 
-    container: '.sticky-container-middle-1', 
-    padding: 10,
-  });
-  sticky({
-    sticky: '.sticky-right-1', 
-    container: '.sticky-container-right-1',
-    padding: 10,
-  });
-  sticky({
-    sticky: '.sticky-middle-2', 
-    container: '.sticky-container-middle-2', 
-    position: 'bottom',
-    padding: 10,
-  });
-  sticky({
-    sticky: '.sticky-right-2',  
-    container: '.sticky-container-right-2',
-    position: 'bottom',
-    padding: 10,
-  });
-</script>
 </body>
 </html>
 
