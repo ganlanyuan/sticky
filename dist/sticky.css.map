@@ -1,9 +1,0 @@
-{
-	"version": 3,
-	"file": "sticky.css",
-	"sources": [
-		"../src/sticky.scss"
-	],
-	"mappings": "AAGA,AAAA,UAAU,AAAC,CACT,UAAU,CAAE,UAAW,CACxB,AACD,AAAA,oBAAoB,AAEjB,OAAO,CAFV,AAAA,oBAAoB,AAGjB,MAAM,CAFT,AAAA,iBAAiB,AACd,OAAO,CADV,AAAA,iBAAiB,AAEd,MAAM,AAAC,CACN,OAAO,CAAE,EAAG,CACZ,OAAO,CAAE,KAAM,CACf,KAAK,CAAE,IAAK,CACb",
-	"names": []
-}
