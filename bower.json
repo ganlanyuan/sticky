@@ -1,13 +1,11 @@
 {
   "name": "sticky",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "main": [
-    "/dist/sticky.css",
-    "/dist/sticky.js"
+    "dist/sticky.css",
+    "dist/sticky.js"
   ],
-  "keywords": [
-    "sticky"
-  ],
+  "keywords": ["sticky"],
   "authors": [
     "William Lin <ganlanyuan@gmail.com>"
   ],
@@ -23,6 +21,9 @@
     "README.md",
     "node_modules",
     "bower_components",
+    ".env",
+    "docker-compose.yml",
+    "gulpfile.js",
     "test",
     "tests"
   ],
@@ -33,6 +34,6 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "go-native": "0.0.3"
+    "go-native": "0.0.8"
   }
 }

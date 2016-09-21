@@ -1,5 +1,10 @@
 ## Change log
 
+#### v0.1.6
+- Updated: devDependency `go-native` to 0.0.8.
+- Fixed: *sticky-helper.ie8.js*, *sticky-helper.ie8.min.js* concat issue.
+- Rename: *sticky-helper.ie8.js* to *sticky.ie8.js*.
+
 #### v0.1.5
 - Fixed: a breakpoint issue.
 

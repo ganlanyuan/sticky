@@ -292,4 +292,3 @@ var sticky = (function () {
   };
 
 })();
-

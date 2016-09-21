@@ -33,7 +33,6 @@ if (!Date.now)
     }
 }());
 
-
 (function(window, document, undefined){
 "use strict";
 
@@ -181,18 +180,16 @@ window.Length = {
     toPx: toPx
 };
 }(this, this.document));
-
 // *** gn *** //
 var gn = (function (g) {
 
   // return gn
   return g;
 })(window.gn || {});
-
 // optimizedResize
 // https://developer.mozilla.org/en-US/docs/Web/Events/resize#requestAnimationFrame
-// @require "/src/gn/gn.js"
-// @require "/src/ie8/es5/arrays/forEach.js"
+// @require "/src/gn/base.js"
+// @require "/src/es5/arrays/forEach.js"
 // @require "/src/ie8/addEventListener.js"
 
 gn.optimizedResize = (function() {
@@ -249,9 +246,8 @@ gn.optimizedResize = (function() {
 // gn.optimizedResize.add(function() {
 //   console.log('Resource conscious resize callback!')
 // });
-
 // extend
-// @require "/src/gn/gn.js"
+// @require "/src/gn/base.js"
 
 gn.extend = function () {
   var obj, name, copy,
@@ -274,9 +270,8 @@ gn.extend = function () {
   }
   return target;
 };
-
 // DOM ready
-// @require "/src/gn/gn.js"
+// @require "/src/gn/base.js"
 
 gn.ready = function ( fn ) {
 
@@ -291,18 +286,16 @@ gn.ready = function ( fn ) {
   // Otherwise, wait until document is loaded
   document.addEventListener( 'DOMContentLoaded', fn, false );
 };
-
 // isNodeList
-// @require "/src/gn/gn.js"
+// @require "/src/gn/base.js"
 
 gn.isNodeList = function (el) {
   // Only NodeList has the "item()" function
   return typeof el.item !== 'undefined'; 
 };
 
-
 // wrap
-// @require "/src/gn/gn.js"
+// @require "/src/gn/base.js"
 // @require "/src/gn/isNodeList.js"
 
 gn.wrap = function (els, obj) {
@@ -332,9 +325,8 @@ gn.wrap = function (els, obj) {
 };
 
 
-
 // unwrap
-// @require "/src/gn/gn.js"
+// @require "/src/gn/base.js"
 // @require "/src/gn/isNodeList.js"
 
 gn.unwrap = function (els) {
@@ -354,20 +346,6 @@ gn.unwrap = function (els) {
     parent.removeChild(el);
   }
 };
-
-
-// @codekit-prepend "../bower_components/requestAnimationFrame/requestAnimationFrame.js";
-// @codekit-prepend "../bower_components/Units/Length.js";
-
-// @codekit-prepend "../bower_components/go-native/src/gn/base.js";
-// @codekit-prepend "../bower_components/go-native/src/gn/optimizedResize.js";
-// @codekit-prepend "../bower_components/go-native/src/gn/extend.js";
-// @codekit-prepend "../bower_components/go-native/src/gn/DOM.ready.js";
-
-// @codekit-prepend "../bower_components/go-native/src/gn/isNodeList.js";
-// @codekit-prepend "../bower_components/go-native/src/gn/wrap.js";
-// @codekit-prepend "../bower_components/go-native/src/gn/unwrap.js";
-
 /**
   * sticky.native (works with go-native)
   *
@@ -662,16 +640,3 @@ var sticky = (function () {
   };
 
 })();
-
-/**
-  * sticky 
-  *
-  * v0.1.5
-  * @author William Lin
-  * @license The MIT License (MIT)
-  * https://github.com/ganlanyuan/sticky
-  */
-
-// @codekit-prepend "sticky-helper.js";
-// @codekit-prepend "sticky.native.js";
-
