@@ -27,7 +27,7 @@ var config = {
     "options": [
       "setClasses"
     ],
-    "feature-detects": [
+    "tests": [
       "touchevents"
     ],
   },
@@ -183,8 +183,8 @@ gulp.task('watch', function () {
 
 // Default Task
 gulp.task('default', [
-  'sass', 
-  'js', 
+  // 'sass', 
+  // 'js', 
   'sync', 
   'watch',
 ]);  

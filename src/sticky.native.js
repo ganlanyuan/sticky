@@ -276,7 +276,7 @@ var sticky = (function () {
           arr = [];
       // if not sticky element been found, do nothing
       if (stickyEls.length === 0) { 
-        throw new Error('"' + options.sticky + '" doesn\'t exist.');
+        return;
       }
 
       // get CONTAINER on dom ready
